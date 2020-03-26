@@ -1,4 +1,12 @@
-<h1>New Post</h1>
+<% if @post.errors.any? %>
+  <div class="alert alert-danger">
+    <ul>
+      <% @post.errors.full_messages.each do |message|%>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 
 <%= form_tag(posts_path, method: "post") do %>
 

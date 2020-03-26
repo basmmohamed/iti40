@@ -4,12 +4,16 @@ class PostsController < ApplicationController
   # GET /posts
   # GET /posts.json
   def index
-    @posts = Post.all
+    # @posts = Post.all
+    @posts = Post.order(updated_at: :desc)
   end
 
   # GET /posts/1
   # GET /posts/1.json
   def show
+    @post= Post.find(params[:id])
+    @comments = Comment.where("post_id = #{@post.id}")
+
   end
 
   # GET /posts/new
@@ -19,46 +23,71 @@ class PostsController < ApplicationController
 
   # GET /posts/1/edit
   def edit
+    @post= Post.find(params[:id])
   end
 
   # POST /posts
   # POST /posts.json
   def create
-    @post = Post.new(post_params)
+    # @post = Post.new(post_params)
+    @post = Post.new
+    @post.title = params[:title]
+    @post.content = params[:content]
+    # p params
+    @post.save
+    # posts_params = params.permit(:title, :content)
+    # @post = Post.Create(posts_params)
+    # @post = User.find(1).posts.create[ posts_params ] # create will automatically call validators
 
-    respond_to do |format|
-      if @post.save
-        format.html { redirect_to @post, notice: 'Post was successfully created.' }
-        format.json { render :show, status: :created, location: @post }
-      else
-        format.html { render :new }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
-      end
+    if @post.save
+    redirect_to :posts
+    else
+    render :new
     end
+    # respond_to do |format|
+    #   if @post.save
+    #     format.html { redirect_to @post, notice: 'Post was successfully created.' }
+    #     format.json { render :show, status: :created, location: @post }
+    #   else
+    #     format.html { render :new }
+    #     format.json { render json: @post.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PATCH/PUT /posts/1
   # PATCH/PUT /posts/1.json
   def update
-    respond_to do |format|
-      if @post.update(post_params)
-        format.html { redirect_to @post, notice: 'Post was successfully updated.' }
-        format.json { render :show, status: :ok, location: @post }
-      else
-        format.html { render :edit }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
+    @post= Post.find(params[:id])
+    @post.update(post_params)
+    if @post.save
+      # @post = Post.create(post_params)
+      redirect_to action: :index
+    else
+      render :edit
       end
-    end
+    # respond_to do |format|
+    #   if @post.update(post_params)
+    #     format.html { redirect_to @post, notice: 'Post was successfully updated.' }
+    #     format.json { render :show, status: :ok, location: @post }
+    #   else
+    #     format.html { render :edit }
+    #     format.json { render json: @post.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # DELETE /posts/1
   # DELETE /posts/1.json
   def destroy
+    @post = Post.find(params[:id])
+
     @post.destroy
-    respond_to do |format|
-      format.html { redirect_to posts_url, notice: 'Post was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    redirect_to :posts
+    # respond_to do |format|
+    #   format.html { redirect_to posts_url, notice: 'Post was successfully destroyed.' }
+    #   format.json { head :no_content }
+    # end
   end
 
   private

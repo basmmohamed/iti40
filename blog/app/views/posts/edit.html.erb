@@ -1,6 +1,24 @@
 <h1>Editing Post</h1>
+<% if @post.errors.any? %>
+  <div class="alert alert-danger">
+    <ul>
+      <% @post.errors.full_messages.each do |message|%>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 
-# <%= render 'form', post: @post %>
+<%= form_for(@post, url: @post) do |f|%>
 
-# <%= link_to 'Show', @post %> |
+    <div class="form_control">
+    <%= f.text_field(:title,placeholder:"Title..",class:"form-control") %>
+    </div>
+    <div class="form_control">
+
+    <%= f.text_area(:content,placeholder:"Content..",class:"form-control",rows: 10) %>
+    </div>
+
+    <%= submit_tag "UPDATE", class: "btn btn-info btn-block" %>
+  <% end %>
 <%= link_to 'Back', posts_path %>

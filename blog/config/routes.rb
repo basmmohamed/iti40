@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   put 'users/update'
   get 'users/edit'
   delete 'users/destroy'
+  post 'posts/:id/comment', to: 'comments#create' ,:as => :post_comments
+  get 'posts/:id/comment', to: 'comments#list' ,:as => :postcomments
+
   # get 'users/name:string'
   resources :posts
   root to: 'posts#index'
