@@ -2,28 +2,29 @@ const express =  require('express');
 const router = express.Router();
 const UserModel = require('../models/users')
 
-
-router.get('/',(req,res)=>{
-    UserModel.find({}).populate('posts').exec((err,user)=>{
+router.get('/',async(req,res)=>{
+    await UserModel.find({}).populate('posts').exec((err,user)=>{
         if(err)
-        return res.send(err); 
+        {console.log("error is ",err);//errror handling 
+        return res.send(err); }
         res.json(user); 
         
     })
     // res.send('hello GET /');
 });
-router.get('/:id',(req,res)=>{
-    UserModel.findOne({_id:req.params.id},(err,user)=>{
+router.get('/:id',async(req,res)=>{
+    await UserModel.findOne({_id:req.params.id},(err,user)=>{
         if(err)
-        return res.send(err); 
+        {console.log("error is ",err);//errror handling 
+        return res.send(err); }
         res.json(user); 
         
     })
     // console.log(req.params);
     // res.send(`hello GET /users/${req.params.id} `);
 });
-router.get('/:id/posts',(req,res)=>{
-    UserModel.find({_id:req.params.id}).
+router.get('/:id/posts',async (req,res)=>{
+   await UserModel.find({_id:req.params.id}).
     populate('posts')
     // populate({path:'author', populate:{
     //     path: 'posts',
@@ -52,11 +53,15 @@ router.post('/', (req,res)=>{
     console.log(fullName);
     
     // res.send(body);
-    user.save((err,user)=>{
-        if(err)
-        return res.send(err); 
+    
+    user.save(function(err,user) {
+        if (err) return res.send(err);
+        // user.comparePassword(req.params.password, function(err, isMatch) {
+        //     if (err) throw err;
+        //     console.log(req.params.password, isMatch); 
+        // });
         res.send(user);
-    })
+    });
 });
 router.patch('/:id',(req,res)=>{
    

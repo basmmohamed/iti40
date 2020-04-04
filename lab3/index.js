@@ -17,16 +17,16 @@ mongoose.connect('mongodb://localhost:27017/blogSystem',{
     console.log('started connect mongo')
     
 })
-// app.use(function log(req,res,next)
-// {
-//     console.log(new Date (),req.method,req.url);
-//     // next('log error');
-    
-// })
-// app.use((err,req,res,next)=>{
-//     // console.log(err);
-    
-// })
+app.use(function log(req,res,next)
+{
+    console.log(new Date (),req.method,req.url);
+    next('log error');
+    // next ();
+})
+app.use((err,req,res,next)=>{
+    console.log(err);
+    next();
+})
 app.use(express.json());//middleware
 app.use('/users',userRouter)
 app.use('/posts',postRouter)
